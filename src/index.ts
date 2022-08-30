@@ -1,9 +1,8 @@
-import Slider, {SliderMode, SliderOrient} from "./model/slider";
-import SliderView from "./view/slider";
+import {SliderMode, SliderOrient} from "./model/slider";
 import SliderController from "./controller/slider";
 
 export type UserSettings = {
-  parent: HTMLElement,
+  root: HTMLElement;
   min: number,
   max: number,
   step: number,
@@ -18,7 +17,7 @@ export type UserSettings = {
 
 function initSlider(): any {
   const userSettings: UserSettings = {
-    parent: document.body,
+    root: document.body,
     min: 0,
     max: 103,
 
@@ -33,10 +32,7 @@ function initSlider(): any {
     orient: SliderOrient.horizontal,
   };
 
-  const model = new Slider(userSettings);
-
-  const view = new SliderView(model);
-  const controller = new SliderController(model, view);
+  const controller = new SliderController(userSettings);
 }
 
 initSlider();

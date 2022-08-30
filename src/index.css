@@ -9,11 +9,7 @@ body {
   display: flex;
   position: relative;
   width: auto;
-
+  height:  30px;
   padding: 5px;
 }
 
-.progress-bar__wrap {
-  background-color: cadetblue;
-  border-radius: 20px;
-}

@@ -15,7 +15,7 @@ export default class Slider {
   public max: number;
   public min: number;
 
-  public parent: HTMLElement;
+  public root: HTMLElement;
 
   public minValue: number;
   public maxValue: number;
@@ -27,7 +27,7 @@ export default class Slider {
   public showValue: boolean;
 
   constructor(props: UserSettings) {
-    this.parent = props.parent;
+    this.root = props.root;
 
     this.max = props.max;
     this.min = props.min;
