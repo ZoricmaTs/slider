@@ -28,6 +28,7 @@ export default class ProgressBar extends EventListener {
       this.progressWrap.addEventListener('mousedown', (e) => {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
+
         this.model.setValue(this.getCountsStep(e.clientX));
         this.updateProgressValue();
       });
@@ -37,6 +38,8 @@ export default class ProgressBar extends EventListener {
 
         if (this.isMouseDown) {
           this.isMouseMove = true;
+
+          this.model.setValue(this.getCountsStep(e.clientX));
           this.updateProgressValue();
         } else {
           this.isMouseMove = false;
@@ -49,6 +52,7 @@ export default class ProgressBar extends EventListener {
         if (this.isMouseMove && this.isMouseDown) {
           this.model.setValue(this.getCountsStep(e.clientX));
           this.updateProgressValue();
+
           this.isMouseMove = false;
           this.isMouseDown = false;
         }
