@@ -1,0 +1,12 @@
+.scale__wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.scale__item {
+  width: 1px;
+  height: 10px;
+  background-color: red;
+}

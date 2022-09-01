@@ -48,8 +48,16 @@ export default class Slider {
     return this.step;
   }
 
-  public setValue(value: number): void {
-    this.value = value;
+  public getRange(): number {
+    return Math.abs(this.max - this.min);
+  }
+
+  public getStepPercent(): number {
+    return Math.trunc(this.getStep() / this.getRange() * 100 * 100) / 100;
+  }
+
+  public setValue(stepCounts: number): void {
+    this.value = stepCounts * this.getStep();
   }
 
   public getValue(): number {

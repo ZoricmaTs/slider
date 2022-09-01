@@ -19,12 +19,10 @@ function initSlider(): any {
   const userSettings: UserSettings = {
     root: document.body,
     min: 0,
-    max: 103,
-
-    step: 5,
+    max: 200,
+    step: 50,
     showDivision: true,
-
-    value: 10,
+    value: 50,
     showValue: false,
     minValue: 0,
     maxValue: 0,
