@@ -20,7 +20,7 @@ function initSlider(): any {
     root: document.body,
     min: 0,
     max: 200,
-    step: 50,
+    step: 20,
     showDivision: true,
     value: 50,
     showValue: false,

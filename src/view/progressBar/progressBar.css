@@ -1,10 +1,10 @@
 .progress-bar__wrap {
   position: relative;
-  background-color: cadetblue;
-  border-radius: 20px;
-  height: 20px;
-  width: 100%;
   overflow: hidden;
+  background-color: cadetblue;
+  border-radius: 5px;
+  height: 10px;
+  width: 100%;
 }
 
 .progress-bar__value {
@@ -15,4 +15,3 @@
   height: 100%;
   background-color: green;
 }
-
