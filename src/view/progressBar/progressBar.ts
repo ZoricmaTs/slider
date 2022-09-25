@@ -23,7 +23,7 @@ export default class ProgressBar extends EventListener {
 
   public addListeners(): void {
     if (this.progressWrap) {
-      this.progressWrap.addEventListener('mousedown', (e) => {
+      this.view.getSliderWrapper().addEventListener('mousedown', (e) => {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
@@ -52,8 +52,9 @@ export default class ProgressBar extends EventListener {
           this.updateProgressValue();
 
           this.isMouseMove = false;
-          this.isMouseDown = false;
         }
+
+        this.isMouseDown = false;
       });
     }
   }

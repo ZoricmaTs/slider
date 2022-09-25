@@ -27,7 +27,7 @@ export default class Thumb extends EventListener {
 
   public addListeners(): void {
     if (this.thumb) {
-      this.thumb.addEventListener('mousedown', (e) => {
+      this.view.getSliderWrapper().addEventListener('mousedown', (e) => {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
@@ -40,6 +40,7 @@ export default class Thumb extends EventListener {
 
         if (this.isMouseDown) {
           this.isMouseMove = true;
+
           this.model.setValue(this.view.getCountsStep(e.clientX));
           this.updatePosition();
         } else {
@@ -51,10 +52,11 @@ export default class Thumb extends EventListener {
         this.fireEvent(this.EVENT_MOUSEUP);
 
         if (this.isMouseMove && this.isMouseDown) {
-
           this.isMouseMove = false;
-          this.isMouseDown = false;
+          this.updatePosition();
         }
+
+        this.isMouseDown = false;
       });
     }
   }
@@ -70,10 +72,10 @@ export default class Thumb extends EventListener {
 
   public updatePosition(): void {
     const counts = this.model.getValue() / this.model.getStep();
-    const width = Math.round(this.view.getStepWidth() * counts) - 5;
+    const left = Math.round(this.view.getStepWidth() * counts) - 10;
 
     if (this.thumb) {
-      this.thumb.style.left = `${width}px`;
+      this.thumb.style.left = `${left}px`;
     }
   }
 }
