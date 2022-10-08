@@ -1,6 +1,6 @@
 import Helper from "../../helper";
 import EventListener from "../../event-listener";
-import Slider from "../../model/slider";
+import Slider, {SliderMode} from "../../model/slider";
 import SliderView from "../slider/slider";
 
 export default class ProgressBar extends EventListener {
@@ -9,7 +9,7 @@ export default class ProgressBar extends EventListener {
   public EVENT_MOUSEDOWN: string = 'event-mousedown';
   public EVENT_MOUSEMOVE: string = 'event-mousemove';
   public EVENT_MOUSEUP: string = 'event-mouseup';
-  private model: Slider;
+  private readonly model: Slider;
   private isMouseDown: boolean = false;
   private isMouseMove: boolean = true;
   private view: SliderView;
@@ -27,7 +27,12 @@ export default class ProgressBar extends EventListener {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
-        this.model.setValue(this.view.getCountsStep(e.clientX));
+        if (this.model.mode === SliderMode.single) {
+          this.model.setValue(this.view.getCountsStep(e.clientX));
+        } else {
+          this.model.setIntervalValue(this.view.getCountsStep(e.clientX));
+        }
+
         this.updateProgressValue();
       });
 
@@ -37,8 +42,13 @@ export default class ProgressBar extends EventListener {
         if (this.isMouseDown) {
           this.isMouseMove = true;
 
-          this.model.setValue(this.view.getCountsStep(e.clientX));
-          this.updateProgressValue();
+          if (this.model.mode === SliderMode.single) {
+            this.model.setValue(this.view.getCountsStep(e.clientX));
+          } else {
+            // this.model.setIntervalValue(this.view.getCountsStep(e.clientX));
+          }
+
+          // this.updateProgressValue();
         } else {
           this.isMouseMove = false;
         }
@@ -48,20 +58,24 @@ export default class ProgressBar extends EventListener {
         this.fireEvent(this.EVENT_MOUSEUP);
 
         if (this.isMouseMove && this.isMouseDown) {
-          this.model.setValue(this.view.getCountsStep(e.clientX));
-          this.updateProgressValue();
+          if (this.model.mode === SliderMode.single) {
+            this.model.setValue(this.view.getCountsStep(e.clientX));
+          } else {
+            // this.model.setIntervalValue(this.view.getCountsStep(e.clientX));
+          }
 
+          // this.updateProgressValue();
           this.isMouseMove = false;
         }
 
         this.isMouseDown = false;
-      });
+      })
     }
   }
 
   public getContainer(): HTMLElement {
-    this.progress = Helper.addElement(['progress-bar__value']);
-    this.progressWrap = Helper.addElement(['progress-bar__wrap']);
+    this.progress = Helper.addElement(['progress']);
+    this.progressWrap = Helper.addElement(['progress-bar']);
     this.progressWrap.append(this.progress)
     return this.progressWrap;
   }
@@ -71,11 +85,26 @@ export default class ProgressBar extends EventListener {
   }
 
   public updateProgressValue(): void {
-    const counts = this.model.getValue() / this.model.getStep();
-    const width = Math.round(this.view.getStepWidth() * counts);
+    const step = this.model.getStep();
+    if (this.model.mode === SliderMode.single) {
+      const counts = this.model.getValue() / step;
+      const width = Math.round(this.view.getStepWidth() * counts);
 
-    if (this.progress) {
-      this.progress.style.width = `${width}px`;
+      if (this.progress) {
+        this.progress.style.width = `${width}px`;
+      }
+
+    } else {
+      const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
+      const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
+
+      const minPosition = Math.round(this.view.getStepWidth() * countsMin);
+      const maxPosition = Math.round(this.view.getStepWidth() * countsMax);
+
+      if (this.progress) {
+        this.progress.style.left = `${minPosition}px`;
+        this.progress.style.right = `${maxPosition}px`;
+      }
     }
   }
 }

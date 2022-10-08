@@ -6,7 +6,24 @@
 }
 
 .scale__item {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.scale__item-step {
+  position: absolute;
+  width: auto;
+  height: 10px;
+}
+
+.scale__item-scale {
   width: 1px;
   height: 10px;
   background-color: red;
+}
+
+.scale__item-step-px {
+  position: absolute;
+  width: auto;
+  bottom: 0;
 }

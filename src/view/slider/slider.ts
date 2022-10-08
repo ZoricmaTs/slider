@@ -49,11 +49,12 @@ export default class SliderView extends EventListener {
 
   public getStepWidth(): number {
     const sliderWidth = this.getSliderWrapRect().width;
-    return Math.trunc(sliderWidth * this.model.getStepPercent() / 100 * 100) / 100;
+    return (sliderWidth * this.model.getStepPercent() / 100 * 100) / 100;
   }
 
-  public getCountsStep(width: number): number {
-    return Math.round(width / this.getStepWidth());
+  public getCountsStep(position: number): number {
+    console.log(`:->getCountsStep`, Math.round(position / this.getStepWidth()));
+    return Math.round(position / this.getStepWidth());
   }
 
 }

@@ -12,8 +12,8 @@ export enum SliderOrient {
 
 
 export default class Slider {
-  public max: number;
-  public min: number;
+  private readonly max: number;
+  private readonly min: number;
 
   public root: HTMLElement;
 
@@ -22,9 +22,9 @@ export default class Slider {
   public step: number;
   public showDivision: boolean;
   public value: number;
-  private mode: SliderMode;
   public orient: SliderOrient;
   public showValue: boolean;
+  readonly mode: SliderMode;
 
   constructor(props: UserSettings) {
     this.root = props.root;
@@ -44,6 +44,14 @@ export default class Slider {
     this.orient = props.orient ? props.orient : SliderOrient.horizontal;
   }
 
+  public getMin(): number {
+    return this.min;
+  }
+
+  public getMax(): number {
+    return this.max;
+  }
+
   public getStep(): number {
     return this.step;
   }
@@ -56,11 +64,39 @@ export default class Slider {
     return Math.trunc(this.getStep() / this.getRange() * 100 * 100) / 100;
   }
 
+  public setIntervalValue(stepCounts: number): void {
+    const value = this.min + stepCounts * this.getStep();
+    const min = Math.abs(this.minValue - value);
+    const max = Math.abs(this.maxValue - value);
+
+    if (min < max) {
+      this.setMinValue(value);
+    } else if (min > max) {
+      this.setMaxValue(value);
+    }
+  }
+
   public setValue(stepCounts: number): void {
     this.value = stepCounts * this.getStep();
   }
 
   public getValue(): number {
     return this.value;
+  }
+
+  public getMinValue(): number {
+    return this.minValue;
+  }
+
+  public getMaxValue(): number {
+    return this.maxValue;
+  }
+
+  public setMinValue(value: number): void {
+    this.minValue = value;
+  }
+
+  public setMaxValue(value: number): void {
+    this.maxValue = value;
   }
 }

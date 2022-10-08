@@ -18,15 +18,15 @@ export type UserSettings = {
 function initSlider(): any {
   const userSettings: UserSettings = {
     root: document.body,
-    min: 0,
+    min: 10,
     max: 200,
-    step: 20,
+    step: 10,
     showDivision: true,
     value: 50,
     showValue: false,
-    minValue: 0,
-    maxValue: 0,
-    mode: SliderMode.single,
+    minValue: 50,
+    maxValue: 150,
+    mode: SliderMode.interval,
     orient: SliderOrient.horizontal,
   };
 

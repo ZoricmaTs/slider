@@ -21,7 +21,7 @@ export default class Thumb extends EventListener {
     this.init();
   }
 
-  public updateProgress() {
+  public updateThumb() {
     this.addListeners();
   }
 
