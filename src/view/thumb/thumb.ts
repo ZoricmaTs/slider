@@ -88,10 +88,24 @@ export default class Thumb extends EventListener {
     if (this.model.mode === SliderMode.single) {
       this.model.setValue(this.view.getCountsStep(position));
     } else {
-      if (this.index === 0) {
-        this.model.setMinValue(this.view.getCountsStep(position) * this.model.getStep() + this.model.getMin());
-      } else {
-        this.model.setMaxValue(this.view.getCountsStep(position) * this.model.getStep() + this.model.getMin());
+      const value = this.view.getCountsStep(position) * this.model.getStep() + this.model.getMin();
+      const maxValue = this.model.getMaxValue();
+      const minValue = this.model.getMinValue();
+
+      if (this.model.getMax() >= value) {
+        if (this.index === 0) {
+          if (value < maxValue) {
+            this.model.setMinValue(value);
+          } else {
+            this.model.setMaxValue(value);
+          }
+        } else {
+          if (value > minValue) {
+            this.model.setMaxValue(value);
+          } else {
+            this.model.setMinValue(value);
+          }
+        }
       }
     }
   }

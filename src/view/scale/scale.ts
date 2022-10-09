@@ -40,12 +40,10 @@ export default class Scale extends EventListener {
       const itemScale = Helper.addElement(['scale__item-scale']);
       const item = Helper.addElement(['scale__item']);
 
-      itemStepPx.innerHTML = `${Math.trunc(this.view.getStepWidth() * i)}`;
       itemStepValue.innerHTML = `${this.model.getMin() + (this.model.getStep() * i)}`;
 
       item.append(itemScale)
       item.append(itemStepValue);
-      item.append(itemStepPx);
 
       items.push(item);
     }
