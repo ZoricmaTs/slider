@@ -99,6 +99,7 @@ export default class SliderController {
       if (this.model.mode === SliderMode.single) {
         this.thumbView = new Thumb(this.model, this.view, 1);
         this.view.getSliderWrapper().append(this.thumbView.getContainer());
+        this.thumbView.updatePosition();
       } else {
         this.thumbFirstView = new Thumb(this.model, this.view, 0);
         this.thumbSecondView = new Thumb(this.model, this.view, 1);

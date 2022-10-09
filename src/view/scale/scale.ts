@@ -36,7 +36,6 @@ export default class Scale extends EventListener {
 
     for (let i = 0; i <= this.getCountsItem(); i += 1) {
       const itemStepValue = Helper.addElement(['scale__item-step']);
-      const itemStepPx = Helper.addElement(['scale__item-step-px']);
       const itemScale = Helper.addElement(['scale__item-scale']);
       const item = Helper.addElement(['scale__item']);
 
