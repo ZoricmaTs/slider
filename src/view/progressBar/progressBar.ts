@@ -19,19 +19,21 @@ export default class ProgressBar extends EventListener {
 
     this.model = model;
     this.view = view;
+
+    this.updateProgressValue = this.updateProgressValue.bind(this);
   }
 
   public addListeners(): void {
+    this.model.on(this.model.EVENT_CHANGE_VALUE, [this.updateProgressValue]);
+    this.model.on(this.model.EVENT_CHANGE_MIN_VALUE, [this.updateProgressValue]);
+    this.model.on(this.model.EVENT_CHANGE_MAX_VALUE, [this.updateProgressValue]);
+
     if (this.progressWrap) {
       this.view.getSliderWrapper().addEventListener('mousedown', (e) => {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
-        if (this.model.mode === SliderMode.single) {
-          this.model.setValue(this.view.getCountsStep(e.clientX));
-        } else {
-          this.model.setIntervalValue(this.view.getCountsStep(e.clientX));
-        }
+        this.onChangeValue(e.clientX);
 
         this.updateProgressValue();
       });
@@ -42,13 +44,9 @@ export default class ProgressBar extends EventListener {
         if (this.isMouseDown) {
           this.isMouseMove = true;
 
-          if (this.model.mode === SliderMode.single) {
-            this.model.setValue(this.view.getCountsStep(e.clientX));
-          } else {
-            // this.model.setIntervalValue(this.view.getCountsStep(e.clientX));
-          }
+          this.onChangeValue(e.clientX);
 
-          // this.updateProgressValue();
+          this.updateProgressValue();
         } else {
           this.isMouseMove = false;
         }
@@ -58,18 +56,22 @@ export default class ProgressBar extends EventListener {
         this.fireEvent(this.EVENT_MOUSEUP);
 
         if (this.isMouseMove && this.isMouseDown) {
-          if (this.model.mode === SliderMode.single) {
-            this.model.setValue(this.view.getCountsStep(e.clientX));
-          } else {
-            // this.model.setIntervalValue(this.view.getCountsStep(e.clientX));
-          }
+          this.onChangeValue(e.clientX);
 
-          // this.updateProgressValue();
+          this.updateProgressValue();
           this.isMouseMove = false;
         }
 
         this.isMouseDown = false;
       })
+    }
+  }
+
+  private onChangeValue(position: number): void {
+    if (this.model.mode === SliderMode.single) {
+      this.model.setValue(this.view.getCountsStep(position));
+    } else {
+      this.model.setIntervalValue(this.view.getCountsStep(position));
     }
   }
 

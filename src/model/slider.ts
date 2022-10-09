@@ -1,20 +1,23 @@
 import {UserSettings} from "../index";
+import EventListener from "../event-listener";
 
 export enum SliderMode {
   single =  0,
   interval = 1,
-};
+}
 
 export enum SliderOrient {
   horizontal =  0,
   vertical = 1,
-};
+}
 
 
-export default class Slider {
+export default class Slider extends EventListener {
   private readonly max: number;
   private readonly min: number;
-
+  public EVENT_CHANGE_VALUE: string = 'event-change-value';
+  public EVENT_CHANGE_MIN_VALUE: string = 'event-change-min-value';
+  public EVENT_CHANGE_MAX_VALUE: string = 'event-change-max-value';
   public root: HTMLElement;
 
   public minValue: number;
@@ -27,6 +30,8 @@ export default class Slider {
   readonly mode: SliderMode;
 
   constructor(props: UserSettings) {
+    super(props);
+
     this.root = props.root;
 
     this.max = props.max;
@@ -71,13 +76,15 @@ export default class Slider {
 
     if (min < max) {
       this.setMinValue(value);
-    } else if (min > max) {
+    } else if (min >= max) {
       this.setMaxValue(value);
     }
   }
 
   public setValue(stepCounts: number): void {
     this.value = stepCounts * this.getStep();
+
+    this.fireEvent(this.EVENT_CHANGE_VALUE);
   }
 
   public getValue(): number {
@@ -94,9 +101,13 @@ export default class Slider {
 
   public setMinValue(value: number): void {
     this.minValue = value;
+
+    this.fireEvent(this.EVENT_CHANGE_MIN_VALUE);
   }
 
   public setMaxValue(value: number): void {
     this.maxValue = value;
+
+    this.fireEvent(this.EVENT_CHANGE_MAX_VALUE);
   }
 }

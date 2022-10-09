@@ -1,5 +1,5 @@
 import EventListener from "../../event-listener";
-import Slider from "../../model/slider";
+import Slider, {SliderMode} from "../../model/slider";
 import Helper from "../../helper";
 import SliderView from "../slider/slider";
 
@@ -12,13 +12,17 @@ export default class Thumb extends EventListener {
   private isMouseMove: boolean = true;
   private model: Slider;
   private view: SliderView;
+  private readonly index: number;
 
-  constructor(model: Slider, view: SliderView) {
+  constructor(model: Slider, view: SliderView, index: number) {
     super(model);
 
     this.model = model;
     this.view = view;
+    this.index = index;
     this.init();
+
+    this.updatePosition = this.updatePosition.bind(this);
   }
 
   public updateThumb() {
@@ -26,13 +30,20 @@ export default class Thumb extends EventListener {
   }
 
   public addListeners(): void {
+    this.model.on(this.model.EVENT_CHANGE_VALUE, [this.updatePosition]);
+    this.model.on(this.model.EVENT_CHANGE_MIN_VALUE, [this.updatePosition]);
+    this.model.on(this.model.EVENT_CHANGE_MAX_VALUE, [this.updatePosition]);
+
     if (this.thumb) {
-      this.view.getSliderWrapper().addEventListener('mousedown', (e) => {
+      this.thumb.addEventListener('mousedown', (e) => {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
-        this.model.setValue(this.view.getCountsStep(e.clientX));
+        this.onChange(e.clientX);
+
         this.updatePosition();
+
+        e.stopPropagation();
       });
 
       window.addEventListener('mousemove', (e) => {
@@ -41,7 +52,8 @@ export default class Thumb extends EventListener {
         if (this.isMouseDown) {
           this.isMouseMove = true;
 
-          this.model.setValue(this.view.getCountsStep(e.clientX));
+          this.onChange(e.clientX);
+
           this.updatePosition();
         } else {
           this.isMouseMove = false;
@@ -52,6 +64,8 @@ export default class Thumb extends EventListener {
         this.fireEvent(this.EVENT_MOUSEUP);
 
         if (this.isMouseMove && this.isMouseDown) {
+          this.onChange(e.clientX);
+
           this.isMouseMove = false;
           this.updatePosition();
         }
@@ -70,12 +84,43 @@ export default class Thumb extends EventListener {
     return this.thumb;
   }
 
-  public updatePosition(): void {
-    const counts = this.model.getValue() / this.model.getStep();
-    const left = Math.round(this.view.getStepWidth() * counts) - 10;
-
-    if (this.thumb) {
-      this.thumb.style.left = `${left}px`;
+  private onChange(position: number): void {
+    if (this.model.mode === SliderMode.single) {
+      this.model.setValue(this.view.getCountsStep(position));
+    } else {
+      if (this.index === 0) {
+        this.model.setMinValue(this.view.getCountsStep(position) * this.model.getStep() + this.model.getMin());
+      } else {
+        this.model.setMaxValue(this.view.getCountsStep(position) * this.model.getStep() + this.model.getMin());
+      }
     }
+  }
+
+  public updatePosition(): void {
+    const step: number = this.model.getStep();
+
+    if (this.model.mode === SliderMode.single) {
+      if (this.thumb) {
+        const counts = this.model.getValue() / step;
+        const left = Math.round(this.view.getStepWidth() * counts) - 10;
+
+        this.thumb.style.left = `${left}px`;
+      }
+    } else {
+      if (this.index === 0) {
+        const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
+        const minPosition = Math.round(this.view.getStepWidth() * countsMin);
+
+        // @ts-ignore
+        this.thumb.style.left = `${minPosition - 10}px`;
+      } else {
+        const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
+        const maxPosition = Math.round(this.view.getStepWidth() * countsMax);
+
+        // @ts-ignore
+        this.thumb.style.right = `${maxPosition - 10}px`;
+      }
+    }
+
   }
 }

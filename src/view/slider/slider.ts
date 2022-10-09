@@ -53,7 +53,6 @@ export default class SliderView extends EventListener {
   }
 
   public getCountsStep(position: number): number {
-    console.log(`:->getCountsStep`, Math.round(position / this.getStepWidth()));
     return Math.round(position / this.getStepWidth());
   }
 

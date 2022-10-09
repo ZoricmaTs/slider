@@ -24,7 +24,7 @@ export default class SliderController {
     this.progressBarView = new ProgressBar(this.model, this.view);
     this.initProgressBar();
 
-    // this.initThumb();
+    this.initThumb();
 
     this.initScale();
 
@@ -56,11 +56,14 @@ export default class SliderController {
       this.thumbView.on(this.thumbView.EVENT_MOUSEMOVE, [this.onMouseMove]);
     }
 
-    if (this.thumbFirstView && this.thumbSecondView) {
+    if (this.thumbFirstView) {
+      this.thumbFirstView.updateThumb();
       this.thumbFirstView.on(this.thumbFirstView.EVENT_MOUSEDOWN, [this.onMouseDown]);
       this.thumbFirstView.on(this.thumbFirstView.EVENT_MOUSEUP, [this.onMouseUp]);
       this.thumbFirstView.on(this.thumbFirstView.EVENT_MOUSEMOVE, [this.onMouseMove]);
-
+    }
+    if (this.thumbSecondView) {
+      this.thumbSecondView.updateThumb();
       this.thumbSecondView.on(this.thumbSecondView.EVENT_MOUSEDOWN, [this.onMouseDown]);
       this.thumbSecondView.on(this.thumbSecondView.EVENT_MOUSEUP, [this.onMouseUp]);
       this.thumbSecondView.on(this.thumbSecondView.EVENT_MOUSEMOVE, [this.onMouseMove]);
@@ -94,11 +97,16 @@ export default class SliderController {
   private initThumb(): void {
     if (this.view) {
       if (this.model.mode === SliderMode.single) {
-        this.thumbView = new Thumb(this.model, this.view);
+        this.thumbView = new Thumb(this.model, this.view, 1);
         this.view.getSliderWrapper().append(this.thumbView.getContainer());
       } else {
-        this.thumbFirstView = new Thumb(this.model, this.view);
-        this.thumbSecondView = new Thumb(this.model, this.view);
+        this.thumbFirstView = new Thumb(this.model, this.view, 0);
+        this.thumbSecondView = new Thumb(this.model, this.view, 1);
+        this.view.getSliderWrapper().append(this.thumbFirstView.getContainer());
+        this.view.getSliderWrapper().append(this.thumbSecondView.getContainer());
+
+        this.thumbFirstView.updatePosition();
+        this.thumbSecondView.updatePosition();
       }
     }
   }
