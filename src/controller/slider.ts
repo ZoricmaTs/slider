@@ -24,7 +24,7 @@ export default class SliderController {
     this.progressBarView = new ProgressBar(this.model, this.view);
     this.initProgressBar();
 
-    this.initThumb();
+    // this.initThumb();
 
     this.initScale();
 

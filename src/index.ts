@@ -26,8 +26,9 @@ function initSlider(): any {
     showValue: false,
     minValue: 50,
     maxValue: 150,
-    mode: SliderMode.interval,
-    orient: SliderOrient.horizontal,
+    mode: SliderMode.single,
+    orient: SliderOrient.vertical,
+    // orient: SliderOrient.horizontal,
   };
 
   const controller = new SliderController(userSettings);

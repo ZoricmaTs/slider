@@ -20,13 +20,13 @@ export default class Slider extends EventListener {
   public EVENT_CHANGE_MAX_VALUE: string = 'event-change-max-value';
   public root: HTMLElement;
 
-  public minValue: number;
-  public maxValue: number;
-  public step: number;
-  public showDivision: boolean;
-  public value: number;
-  public orient: SliderOrient;
-  public showValue: boolean;
+  private minValue: number;
+  private maxValue: number;
+  private readonly step: number;
+  private readonly showDivision: boolean;
+  private value: number;
+  private readonly orient: SliderOrient;
+  private readonly showValue: boolean;
   readonly mode: SliderMode;
 
   constructor(props: UserSettings) {
@@ -47,6 +47,10 @@ export default class Slider extends EventListener {
 
     this.mode = props.mode ? props.mode : SliderMode.single;
     this.orient = props.orient ? props.orient : SliderOrient.horizontal;
+  }
+
+  public getOrient(): SliderOrient {
+    return this.orient;
   }
 
   public getMin(): number {
@@ -81,8 +85,8 @@ export default class Slider extends EventListener {
     }
   }
 
-  public setValue(stepCounts: number): void {
-    this.value = stepCounts * this.getStep();
+  public setValue(value: number): void {
+    this.value = value;
 
     this.fireEvent(this.EVENT_CHANGE_VALUE);
   }

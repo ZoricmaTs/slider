@@ -1,5 +1,5 @@
 import EventListener from "../../event-listener";
-import Slider, {SliderMode} from "../../model/slider";
+import Slider, {SliderMode, SliderOrient} from "../../model/slider";
 import Helper from "../../helper";
 import SliderView from "../slider/slider";
 
@@ -77,6 +77,13 @@ export default class Thumb extends EventListener {
 
   private init(): void {
     this.thumb = Helper.addElement(['thumb']);
+
+    if (this.model.getOrient() === SliderOrient.vertical) {
+      this.thumb.style.left = `-5px`;
+    } else {
+      this.thumb.style.top = `-5px`;
+    }
+
   }
 
   public getContainer(): HTMLElement {
@@ -117,20 +124,23 @@ export default class Thumb extends EventListener {
     if (this.model.mode === SliderMode.single) {
       if (this.thumb) {
         const counts = this.model.getValue() / step;
-        const left = Math.round(this.view.getStepWidth() * counts) - 10;
-
-        this.thumb.style.left = `${left}px`;
+        const position = Math.round(this.view.getStepSize() * counts) - 10;
+        if (this.model.getOrient() === SliderOrient.vertical) {
+          this.thumb.style.top = `${position}px`;
+        } else {
+          this.thumb.style.left = `${position}px`;
+        }
       }
     } else {
       if (this.index === 0) {
         const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
-        const minPosition = Math.round(this.view.getStepWidth() * countsMin);
+        const minPosition = Math.round(this.view.getStepSize() * countsMin);
 
         // @ts-ignore
         this.thumb.style.left = `${minPosition - 10}px`;
       } else {
         const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
-        const maxPosition = Math.round(this.view.getStepWidth() * countsMax);
+        const maxPosition = Math.round(this.view.getStepSize() * countsMax);
 
         // @ts-ignore
         this.thumb.style.right = `${maxPosition - 10}px`;

@@ -1,5 +1,5 @@
 import EventListener from "../../event-listener";
-import Slider from "../../model/slider";
+import Slider, {SliderOrient} from "../../model/slider";
 import Helper from "../../helper";
 
 export default class SliderView extends EventListener {
@@ -18,6 +18,23 @@ export default class SliderView extends EventListener {
   public initSlider(): void {
     this.slider = Helper.addElement(['slider']);
     this.sliderWrapper = Helper.addElement(['wrap']);
+
+    if (this.model.getOrient() === SliderOrient.vertical) {
+      this.slider.style.flexDirection = 'row';
+      this.slider.style.display = 'inline-flex';
+
+      this.slider.style.height = '500px';
+
+      this.sliderWrapper.style.width = '10px';
+      this.sliderWrapper.style.height = '100%';
+    } else {
+      this.slider.style.flexDirection = 'column';
+      this.slider.style.display = 'flex';
+
+      this.sliderWrapper.style.width = '100%';
+      this.sliderWrapper.style.height = '10px';
+    }
+
     this.slider.append(this.sliderWrapper);
   }
 
@@ -47,13 +64,20 @@ export default class SliderView extends EventListener {
     };
   }
 
-  public getStepWidth(): number {
-    const sliderWidth = this.getSliderWrapRect().width;
-    return (sliderWidth * this.model.getStepPercent() / 100 * 100) / 100;
+  public getStepSize(): number {
+    let size: number;
+
+    if (this.model.getOrient() === SliderOrient.vertical) {
+      size = this.getSliderWrapRect().height;
+    } else {
+      size = this.getSliderWrapRect().width;
+    }
+
+    return (size * this.model.getStepPercent() / 100 * 100) / 100;
   }
 
   public getCountsStep(position: number): number {
-    return Math.round(position / this.getStepWidth());
+    return Math.round(position / this.getStepSize());
   }
 
 }

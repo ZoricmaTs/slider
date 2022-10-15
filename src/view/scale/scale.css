@@ -1,6 +1,6 @@
 .scale__wrap {
   display: flex;
-  flex-direction: row;
+  position: relative;
   justify-content: space-between;
   width: 100%;
   -webkit-touch-callout: none; /* iOS Safari */
@@ -12,19 +12,16 @@
 }
 
 .scale__item {
-  flex-direction: column;
+  display: flex;
   align-items: flex-start;
 }
 
 .scale__item-step {
   position: absolute;
   width: auto;
-  height: 10px;
 }
 
 .scale__item-scale {
-  width: 1px;
-  height: 10px;
   background-color: red;
 }
 

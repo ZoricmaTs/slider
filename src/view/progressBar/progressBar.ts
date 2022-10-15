@@ -1,11 +1,11 @@
 import Helper from "../../helper";
 import EventListener from "../../event-listener";
-import Slider, {SliderMode} from "../../model/slider";
+import Slider, {SliderMode, SliderOrient} from "../../model/slider";
 import SliderView from "../slider/slider";
 
 export default class ProgressBar extends EventListener {
   public progress: HTMLElement | undefined;
-  public progressWrap: HTMLElement | undefined;
+  public progressBar: HTMLElement | undefined;
   public EVENT_MOUSEDOWN: string = 'event-mousedown';
   public EVENT_MOUSEMOVE: string = 'event-mousemove';
   public EVENT_MOUSEUP: string = 'event-mouseup';
@@ -28,12 +28,12 @@ export default class ProgressBar extends EventListener {
     this.model.on(this.model.EVENT_CHANGE_MIN_VALUE, [this.updateProgressValue]);
     this.model.on(this.model.EVENT_CHANGE_MAX_VALUE, [this.updateProgressValue]);
 
-    if (this.progressWrap) {
+    if (this.progressBar) {
       this.view.getSliderWrapper().addEventListener('mousedown', (e) => {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
-        this.onChangeValue(e.clientX);
+        this.onChangeValue(this.model.getOrient() === SliderOrient.vertical ? e.clientY : e.clientX);
 
         this.updateProgressValue();
       });
@@ -75,11 +75,37 @@ export default class ProgressBar extends EventListener {
     }
   }
 
+  private initVerticalOrientStyles(): void {
+    if (this.progress) {
+      this.progress.style.width = '100%';
+    }
+
+    if (this.progressBar) {
+
+    }
+  }
+
+  private initHorizontalOrientStyles(): void {
+    if (this.progress) {
+      this.progress.style.height = '100%';
+    }
+
+    if (this.progressBar) {
+
+    }
+  }
+
   public getContainer(): HTMLElement {
     this.progress = Helper.addElement(['progress']);
-    this.progressWrap = Helper.addElement(['progress-bar']);
-    this.progressWrap.append(this.progress)
-    return this.progressWrap;
+    this.progressBar = Helper.addElement(['progress-bar']);
+    if (this.model.getOrient() === SliderOrient.vertical) {
+      this.initVerticalOrientStyles();
+    } else {
+      this.initHorizontalOrientStyles();
+    }
+
+    this.progressBar.append(this.progress)
+    return this.progressBar;
   }
 
   public updateProgress() {
@@ -89,19 +115,24 @@ export default class ProgressBar extends EventListener {
   public updateProgressValue(): void {
     const step = this.model.getStep();
     if (this.model.mode === SliderMode.single) {
-      const counts = this.model.getValue() / step;
-      const width = Math.round(this.view.getStepWidth() * counts);
+      const counts: number = this.model.getValue() / step;
+      const progress: number = Math.round(this.view.getStepSize() * counts);
 
       if (this.progress) {
-        this.progress.style.width = `${width}px`;
+        if (this.model.getOrient() === SliderOrient.vertical) {
+          this.progress.style.height = `${progress}px`;
+
+        } else {
+          this.progress.style.width = `${progress}px`;
+        }
       }
 
     } else {
-      const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
-      const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
+      const countsMin: number = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
+      const countsMax: number = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
 
-      const minPosition = Math.round(this.view.getStepWidth() * countsMin);
-      const maxPosition = Math.round(this.view.getStepWidth() * countsMax);
+      const minPosition: number = Math.round(this.view.getStepSize() * countsMin);
+      const maxPosition: number = Math.round(this.view.getStepSize() * countsMax);
 
       if (this.progress) {
         this.progress.style.left = `${minPosition}px`;
