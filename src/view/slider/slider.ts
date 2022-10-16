@@ -76,7 +76,7 @@ export default class SliderView extends EventListener {
     return (size * this.model.getStepPercent() / 100 * 100) / 100;
   }
 
-  public getCountsStep(position: number): number {
+  public getCountSteps(position: number): number {
     return Math.round(position / this.getStepSize());
   }
 

@@ -92,7 +92,7 @@ export default class Thumb extends EventListener {
   }
 
   private onChange(position: number): void {
-    const value = this.view.getCountsStep(position) * this.model.getStep() + this.model.getMin();
+    const value = this.view.getCountSteps(position) * this.model.getStep() + this.model.getMin();
 
     if (value <= this.model.getMax()) {
       if (this.model.mode === SliderMode.single) {

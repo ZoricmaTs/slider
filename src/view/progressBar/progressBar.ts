@@ -44,7 +44,7 @@ export default class ProgressBar extends EventListener {
         if (this.isMouseDown) {
           this.isMouseMove = true;
 
-          this.onChangeValue(e.clientX);
+          this.onChangeValue(this.model.getOrient() === SliderOrient.vertical ? e.clientY : e.clientX);
 
           this.updateProgressValue();
         } else {
@@ -56,7 +56,7 @@ export default class ProgressBar extends EventListener {
         this.fireEvent(this.EVENT_MOUSEUP);
 
         if (this.isMouseMove && this.isMouseDown) {
-          this.onChangeValue(e.clientX);
+          this.onChangeValue(this.model.getOrient() === SliderOrient.vertical ? e.clientY : e.clientX);
 
           this.updateProgressValue();
           this.isMouseMove = false;
@@ -69,9 +69,12 @@ export default class ProgressBar extends EventListener {
 
   private onChangeValue(position: number): void {
     if (this.model.mode === SliderMode.single) {
-      this.model.setValue(this.view.getCountsStep(position));
+      const countSteps: number = this.view.getCountSteps(position);
+      const value: number = countSteps * this.model.getStep();
+
+      this.model.setValue(value);
     } else {
-      this.model.setIntervalValue(this.view.getCountsStep(position));
+      this.model.setIntervalValue(this.view.getCountSteps(position));
     }
   }
 
