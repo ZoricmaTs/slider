@@ -39,7 +39,7 @@ export default class Thumb extends EventListener {
         this.fireEvent(this.EVENT_MOUSEDOWN);
         this.isMouseDown = true;
 
-        this.onChange(e.clientX);
+        this.onChange(this.model.getOrient() === SliderOrient.vertical ? e.clientY : e.clientX);
 
         this.updatePosition();
 
@@ -52,7 +52,7 @@ export default class Thumb extends EventListener {
         if (this.isMouseDown) {
           this.isMouseMove = true;
 
-          this.onChange(e.clientX);
+          this.onChange(this.model.getOrient() === SliderOrient.vertical ? e.clientY : e.clientX);
 
           this.updatePosition();
         } else {
@@ -64,7 +64,7 @@ export default class Thumb extends EventListener {
         this.fireEvent(this.EVENT_MOUSEUP);
 
         if (this.isMouseMove && this.isMouseDown) {
-          this.onChange(e.clientX);
+          this.onChange(this.model.getOrient() === SliderOrient.vertical ? e.clientY : e.clientX);
 
           this.isMouseMove = false;
           this.updatePosition();
