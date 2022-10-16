@@ -83,7 +83,6 @@ export default class Thumb extends EventListener {
     } else {
       this.thumb.style.top = `-5px`;
     }
-
   }
 
   public getContainer(): HTMLElement {
@@ -135,15 +134,23 @@ export default class Thumb extends EventListener {
       if (this.index === 0) {
         const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
         const minPosition = Math.round(this.view.getStepSize() * countsMin);
-
-        // @ts-ignore
-        this.thumb.style.left = `${minPosition - 10}px`;
+        if (this.model.getOrient() === SliderOrient.vertical) {
+          // @ts-ignore
+          this.thumb.style.top = `${minPosition - 10}px`;
+        } else {
+          // @ts-ignore
+          this.thumb.style.left = `${minPosition - 10}px`;
+        }
       } else {
         const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
         const maxPosition = Math.round(this.view.getStepSize() * countsMax);
-
-        // @ts-ignore
-        this.thumb.style.right = `${maxPosition - 10}px`;
+        if (this.model.getOrient() === SliderOrient.vertical) {
+          // @ts-ignore
+          this.thumb.style.bottom = `${maxPosition - 10}px`;
+        } else {
+          // @ts-ignore
+          this.thumb.style.right = `${maxPosition - 10}px`;
+        }
       }
     }
 

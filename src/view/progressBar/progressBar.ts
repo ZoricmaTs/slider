@@ -124,7 +124,6 @@ export default class ProgressBar extends EventListener {
       if (this.progress) {
         if (this.model.getOrient() === SliderOrient.vertical) {
           this.progress.style.height = `${progress}px`;
-
         } else {
           this.progress.style.width = `${progress}px`;
         }
@@ -138,8 +137,13 @@ export default class ProgressBar extends EventListener {
       const maxPosition: number = Math.round(this.view.getStepSize() * countsMax);
 
       if (this.progress) {
-        this.progress.style.left = `${minPosition}px`;
-        this.progress.style.right = `${maxPosition}px`;
+        if (this.model.getOrient() === SliderOrient.vertical) {
+          this.progress.style.top = `${minPosition}px`;
+          this.progress.style.bottom = `${maxPosition}px`;
+        } else {
+          this.progress.style.left = `${minPosition}px`;
+          this.progress.style.right = `${maxPosition}px`;
+        }
       }
     }
   }
