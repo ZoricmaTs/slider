@@ -8,4 +8,8 @@ export default class Helper {
 
     return element;
   }
+
+  static getComputedValue(element: HTMLElement, styleName: string): number {
+    return Number(window.getComputedStyle(element, null).getPropertyValue(styleName).slice(0, -2));
+  }
 }

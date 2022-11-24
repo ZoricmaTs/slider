@@ -2,6 +2,13 @@ import EventListener from "../../event-listener";
 import Slider, {SliderOrient} from "../../model/slider";
 import Helper from "../../helper";
 
+export enum Paddings {
+  LEFT = 'padding-left',
+  TOP = 'padding-top',
+  RIGHT = 'padding-right',
+  BOTTOM = 'padding-bottom',
+}
+
 export default class SliderView extends EventListener {
   private sliderWrapper: HTMLElement | undefined;
   private model: Slider;
@@ -25,7 +32,7 @@ export default class SliderView extends EventListener {
 
       this.slider.style.height = '500px';
 
-      this.sliderWrapper.style.width = '10px';
+      this.sliderWrapper.style.width = '15px';
       this.sliderWrapper.style.height = '100%';
     } else {
       this.slider.style.flexDirection = 'column';

@@ -77,12 +77,6 @@ export default class Thumb extends EventListener {
 
   private init(): void {
     this.thumb = Helper.addElement(['thumb']);
-
-    if (this.model.getOrient() === SliderOrient.vertical) {
-      this.thumb.style.left = `-5px`;
-    } else {
-      this.thumb.style.top = `-5px`;
-    }
   }
 
   public getContainer(): HTMLElement {
@@ -120,39 +114,45 @@ export default class Thumb extends EventListener {
   public updatePosition(): void {
     const step: number = this.model.getStep();
 
-    if (this.model.mode === SliderMode.single) {
-      if (this.thumb) {
+    if (this.thumb) {
+      const radius: number = this.thumb.getBoundingClientRect().width / 2;
+
+      if (this.model.mode === SliderMode.single) {
         const counts = this.model.getValue() / step;
         const position = Math.round(this.view.getStepSize() * counts) - 10;
+
         if (this.model.getOrient() === SliderOrient.vertical) {
+          this.thumb.style.left = `-50%`;
           this.thumb.style.top = `${position}px`;
         } else {
           this.thumb.style.left = `${position}px`;
-        }
-      }
-    } else {
-      if (this.index === 0) {
-        const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
-        const minPosition = Math.round(this.view.getStepSize() * countsMin);
-        if (this.model.getOrient() === SliderOrient.vertical) {
-          // @ts-ignore
-          this.thumb.style.top = `${minPosition - 10}px`;
-        } else {
-          // @ts-ignore
-          this.thumb.style.left = `${minPosition - 10}px`;
+          this.thumb.style.top = `-50%`;
         }
       } else {
-        const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
-        const maxPosition = Math.round(this.view.getStepSize() * countsMax);
-        if (this.model.getOrient() === SliderOrient.vertical) {
-          // @ts-ignore
-          this.thumb.style.bottom = `${maxPosition - 10}px`;
+        if (this.index === 0) {
+          const countsMin = Math.round((this.model.getMinValue() - this.model.getMin()) / step);
+          const minPosition = Math.round(this.view.getStepSize() * countsMin);
+
+          if (this.model.getOrient() === SliderOrient.vertical) {
+            this.thumb.style.top = `${minPosition - radius}px`;
+            this.thumb.style.left = `-50%`;
+          } else {
+            this.thumb.style.left = `${minPosition - radius}px`;
+            this.thumb.style.top = `-50%`;
+          }
         } else {
-          // @ts-ignore
-          this.thumb.style.right = `${maxPosition - 10}px`;
+          const countsMax = Math.round((this.model.getMax() - this.model.getMaxValue()) / step);
+          const maxPosition = Math.round(this.view.getStepSize() * countsMax);
+
+          if (this.model.getOrient() === SliderOrient.vertical) {
+            this.thumb.style.bottom = `${maxPosition - radius}px`;
+            this.thumb.style.left =  `-50%`;
+          } else {
+            this.thumb.style.right = `${maxPosition - radius}px`;
+            this.thumb.style.top =  `-50%`;
+          }
         }
       }
     }
-
   }
 }
